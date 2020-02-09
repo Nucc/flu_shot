@@ -1,4 +1,5 @@
 require "flu_shot/version"
+require 'flu_shot/vaccine'
 
 module FluShot
   class Error < StandardError; end
