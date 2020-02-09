@@ -1,5 +1,6 @@
 require "flu_shot/version"
 require 'flu_shot/vaccine'
+require 'flu_shot/prescription'
 
 module FluShot
   class Error < StandardError; end
@@ -7,8 +8,10 @@ module FluShot
   def self.inject(name, &block)
     return if before_filter && before_filter.call
 
+    # @test
     _before_init
   rescue
+    # @test
     _exception_muted
 
   ensure
@@ -23,10 +26,11 @@ module FluShot
 
   attr_reader :before_filter
 
-  # for testing purposes to raise exceptions from the test
+  # @test
   def self._before_init
   end
 
+  # @test
   def self._exception_muted
   end
 end
