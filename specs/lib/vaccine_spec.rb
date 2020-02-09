@@ -3,7 +3,7 @@ require 'spec_helper'
 describe FluShot::Vaccine do
   it 'has an unknown label by default' do
     vaccine = FluShot::Vaccine.new
-    assert_equal 'unknown', vaccine.label
+    assert_equal :unknown, vaccine.label
   end
 
   it 'has a label that registers itself in a repo' do
@@ -19,14 +19,16 @@ describe FluShot::Vaccine do
 
   describe '#find' do
     it 'can initialize a vaccine from the label' do
-      my_class = Class.new(FluShot::Vaccine) { label :latency }
-      assert_equal FluShot::Vaccine.find(:latency), my_class
+      class Vaccine1 < FluShot::Vaccine
+        label :vaccine1
+      end
+      assert_equal Vaccine1, FluShot::Vaccine.find(:vaccine1)
     end
   end
 
   describe '#use' do
     it 'finds and executes the vaccine' do
-      Class.new(FluShot::Vaccine) do
+      class Vaccine2 < FluShot::Vaccine
         attr_reader :test_value
         label :latency
 
@@ -39,7 +41,7 @@ describe FluShot::Vaccine do
     end
 
     it 'finds and executes the vaccine with attributes' do
-      Class.new(FluShot::Vaccine) do
+      class Vaccine3 < FluShot::Vaccine
         attr_reader :min, :max
         label :latency
 

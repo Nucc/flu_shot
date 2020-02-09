@@ -27,21 +27,37 @@ module FluShot
       @attributes = attributes
     end
 
-    def self.label(name)
-      @@register ||= {}
-      @@register[name] = self
+    def self.label(name = nil)
+      if name.nil?
+        if defined?(@vaccine_name)
+          @vaccine_name
+        end || :unknown
+      else
+        @vaccine_name = name
+        storage[name] = self
+      end
     end
 
     def self.registered
-      @@register.keys
+      self.storage.keys
     end
 
     def self.find(name)
-      @@register[name]
+      self.storage[name]
     end
 
     def self.use(name, params = {})
       find(name).new(params)
+    end
+
+    def label
+      self.class.label
+    end
+
+    private
+
+    def self.storage
+      @@storage ||= {}
     end
   end
 end
