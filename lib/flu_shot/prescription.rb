@@ -1,29 +1,26 @@
 module FluShot
   class Prescription
     def self.spec(name, &block)
-      @@prescriptions ||= {}
-      instance = self.new(name)
-      @@prescriptions[name] = instance
-      block.call(instance) if block_given?
+      block.call(self.new(name)) if block_given?
     end
 
     def initialize(name)
       @name = name
-      storage[@name] = []
+      self.class.prescriptions[@name] = []
     end
 
     def add(vaccine, params = {})
-      storage[@name] << { name: FluShot::Vaccine.find(vaccine), params: params }
+      self.class.prescriptions[@name] << { name: FluShot::Vaccine.find(vaccine), params: params }
     end
 
     def self.for(name)
-      @@storage[name].map{ |x| x[:name] }
+      Array(prescriptions[name])
     end
 
     private
 
-    def storage
-      @@storage ||= {}
+    def self.prescriptions
+      Thread.current[:presciptions] ||= {}
     end
   end
 end

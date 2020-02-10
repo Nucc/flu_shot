@@ -16,7 +16,7 @@ describe FluShot::Prescription do
         order.add(:vaccine)
       end
 
-      assert_equal VaccineMock, FluShot::Prescription.for(:name).first
+      assert_equal({:name => VaccineMock, :params => {}}, FluShot::Prescription.for(:name).first)
     end
 
     it 'remembers to the ingridients of the vaccines' do
@@ -25,7 +25,7 @@ describe FluShot::Prescription do
         p.add(:vaccine, {param: 2})
       end
 
-      assert_equal VaccineMock, FluShot::Prescription.for(:name).first
+      assert_equal({:name => VaccineMock, :params => {:param => 1}}, FluShot::Prescription.for(:name).first)
       assert_equal 2, FluShot::Prescription.for(:name).size
     end
   end

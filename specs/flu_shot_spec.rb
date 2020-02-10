@@ -41,6 +41,9 @@ describe FluShot do
       FluShot.inject_only_if do
         raise 'it should be catched'
       end
+      FluShot.expects(:_before_init).never
+      FluShot.expects(:_exception_muted).once
+      FluShot.inject('name')
     end
   end
 end

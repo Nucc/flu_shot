@@ -34,16 +34,16 @@ module FluShot
         end || :unknown
       else
         @vaccine_name = name
-        storage[name] = self
+        vaccines[name] = self
       end
     end
 
     def self.registered
-      self.storage.keys
+      self.vaccines.keys
     end
 
     def self.find(name)
-      self.storage[name]
+      self.vaccines[name]
     end
 
     def self.use(name, params = {})
@@ -56,8 +56,8 @@ module FluShot
 
     private
 
-    def self.storage
-      @@storage ||= {}
+    def self.vaccines
+      Thread.current[:vaccines] ||= {}
     end
   end
 end
