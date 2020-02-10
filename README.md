@@ -1,8 +1,43 @@
 # FluShot
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/flu_shot`. To experiment with that code, run `bin/console` for an interactive prompt.
+<img style="float: right;" src="https://raw.githubusercontent.com/Nucc/flu_shot/assets/logo.png"/>
 
-TODO: Delete this and the text above, and describe your gem
+FluShot is a Chaos Testing tool for Ruby applications. It can inject unexpected behaviors into your system, like adding extra latency to a network request, simulating infinite loops, raising exceptions.
+
+**The project is currently in `work in progress`**
+
+Idea:
+
+First we specify the area where the flu shot needs to be injected:
+
+```
+class UserController < ApplicationController
+  def show
+    FluShot.inject(:user_controller_show) do
+      User.find(params[:user_id])
+    end
+  end
+end
+```
+
+We can specify vaccines that has a certain behaviour, like adding extra latency:
+```
+class Latency < FluShot::Vaccine
+  label :latency
+
+  def initialize(params = {})
+    sleep(rand(params[:max] - params[:min]) + params[:min])
+  end
+end
+```
+
+Finally we need to create a prescription for the `user_controller_show` and inject the `latency` vaccine:
+
+```
+FluShot::Prescription.for(:user_controller_show) do |prescription|
+  prescription.add(:latency, {min: 1000, max: 3000})
+end
+```
 
 ## Installation
 
@@ -22,7 +57,6 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
 
 ## Development
 
@@ -32,7 +66,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/flu_shot. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/nucc/flu_shot. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
