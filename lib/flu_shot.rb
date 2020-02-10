@@ -6,7 +6,13 @@ module FluShot
   class Error < StandardError; end
 
   def self.inject(name, &block)
-    return if before_filter && before_filter.call
+    if !before_filter.call
+      return
+    end
+
+    Prescription.for(name).each do |vaccine|
+      vaccine[:name].new(vaccine[:params])
+    end
 
     # @test
     _before_init
@@ -19,12 +25,15 @@ module FluShot
   end
 
   def self.inject_only_if(&block)
-    @before_filter = block
+    Thread.current[:before_filter] = block
   end
 
   private
 
-  attr_reader :before_filter
+  def self.before_filter
+    Thread.current[:before_filter] ||= Proc.new { true }
+    Thread.current[:before_filter]
+  end
 
   # @test
   def self._before_init
