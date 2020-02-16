@@ -3,6 +3,11 @@ require 'flu_shot/vaccine'
 require 'flu_shot/prescription'
 
 module FluShot
+  module Storage
+    autoload :Memory, 'flu_shot/storage/memory'
+    autoload :Redis, 'flu_shot/storage/redis'
+  end
+
   class Error < StandardError; end
 
   def self.inject(name, &block)
@@ -10,8 +15,8 @@ module FluShot
       return
     end
 
-    Prescription.for(name).each do |vaccine|
-      vaccine[:name].new(vaccine[:params])
+    Prescription.for(name).each do |prescription|
+      Vaccine.find(prescription[:vaccine]).new(prescription[:params])
     end
 
     # @test

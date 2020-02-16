@@ -4,7 +4,7 @@ describe FluShot::Prescription do
   describe '#spec' do
 
     class VaccineMock < FluShot::Vaccine
-      label :vaccine
+      label :vaccine_label
 
       def initialize(*params)
         params
@@ -13,19 +13,19 @@ describe FluShot::Prescription do
 
     it 'registers vaccines' do
       FluShot::Prescription.spec(:name) do |order|
-        order.add(:vaccine)
+        order.add(:vaccine_label)
       end
 
-      assert_equal({:name => VaccineMock, :params => {}}, FluShot::Prescription.for(:name).first)
+      assert_equal({:vaccine => :vaccine_label, :params => {}}, FluShot::Prescription.for(:name).first)
     end
 
     it 'remembers to the ingridients of the vaccines' do
       FluShot::Prescription.spec(:name) do |p|
-        p.add(:vaccine, {param: 1})
-        p.add(:vaccine, {param: 2})
+        p.add(:vaccine_label, {param: 1})
+        p.add(:vaccine_label, {param: 2})
       end
 
-      assert_equal({:name => VaccineMock, :params => {:param => 1}}, FluShot::Prescription.for(:name).first)
+      assert_equal({:vaccine => :vaccine_label, :params => {:param => 1}}, FluShot::Prescription.for(:name).first)
       assert_equal 2, FluShot::Prescription.for(:name).size
     end
   end

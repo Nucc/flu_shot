@@ -10,7 +10,7 @@ module FluShot
     end
 
     def add(vaccine, params = {})
-      self.class.prescriptions[@name] << { name: FluShot::Vaccine.find(vaccine), params: params }
+      self.class.prescriptions[@name] << { vaccine: vaccine, params: params }
     end
 
     def self.for(name)
