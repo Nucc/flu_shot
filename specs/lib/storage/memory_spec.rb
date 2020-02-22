@@ -9,8 +9,7 @@ describe FluShot::Storage::Memory do
     assert_equal [], @store.get('prescription_name')
   end
 
-
-  it 'stores vaccine for a prescription' do
+  it 'stores vaccines for a prescription' do
     @store.add('prescription_name', {vaccine: 'vaccine_name'})
     assert_equal 'vaccine_name', @store.get('prescription_name').first[:vaccine]
   end
@@ -19,5 +18,4 @@ describe FluShot::Storage::Memory do
     @store.add('prescription_name', {vaccine: 'vaccine_name', params: {param: 'value'}})
     assert_equal 'value', @store.get('prescription_name').first[:params][:param]
   end
-
 end

@@ -1,6 +1,7 @@
 require "flu_shot/version"
 require 'flu_shot/vaccine'
 require 'flu_shot/prescription'
+require 'flu_shot/config'
 
 module FluShot
   module Storage

@@ -6,21 +6,23 @@ module FluShot
 
     def initialize(name)
       @name = name
-      self.class.prescriptions[@name] = []
+      self.class.prescriptions.add(@name, [])
     end
 
     def add(vaccine, params = {})
-      self.class.prescriptions[@name] << { vaccine: vaccine, params: params }
+      current = self.class.prescriptions.get(@name)
+      current << { vaccine: vaccine, params: params }
+      self.class.prescriptions.add(@name, current)
     end
 
     def self.for(name)
-      Array(prescriptions[name])
+      prescriptions.get(name)
     end
 
     private
 
     def self.prescriptions
-      Thread.current[:presciptions] ||= {}
+      Config.storage
     end
   end
 end

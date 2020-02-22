@@ -7,6 +7,7 @@ require "mocha/minitest"
 
 class Minitest::Spec
   before :each do
+    FluShot::Config.storage = FluShot::Storage::Memory.new
     FluShot.inject_only_if { true }
   end
 end

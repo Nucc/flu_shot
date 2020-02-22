@@ -5,9 +5,10 @@ module FluShot
         @storage = {}
       end
 
-      def add(prescription_name, vaccine_details)
+      def add(prescription_name, vaccines)
         @storage[prescription_name] ||= []
-        @storage[prescription_name] << vaccine_details
+        vaccines = [vaccines] unless vaccines.is_a?(Array)
+        @storage[prescription_name] = vaccines
       end
 
       def get(prescription_name)
