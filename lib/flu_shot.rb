@@ -2,6 +2,8 @@ require "flu_shot/version"
 require 'flu_shot/vaccine'
 require 'flu_shot/prescription'
 require 'flu_shot/config'
+require 'flu_shot/sneeze'
+
 
 module FluShot
   module Storage
@@ -22,12 +24,15 @@ module FluShot
 
     # @test
     _before_init
+    block_given? ? block.call : nil
+
+  rescue FluShot::Sneeze => sneeze
+    raise sneeze.wrapped_exception
+
   rescue
     # @test
     _exception_muted
-
-  ensure
-    return block_given? ? block.call : nil
+    block_given? ? block.call : nil
   end
 
   def self.inject_only_if(&block)

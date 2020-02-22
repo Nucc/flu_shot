@@ -46,4 +46,14 @@ describe FluShot do
       FluShot.inject('name')
     end
   end
+
+  describe 'sneeze' do
+    it 'is not rescued' do
+      FluShot.stubs(:_before_init).raises(FluShot::Sneeze.new(StandardError.new), 'should not be catched')
+
+      assert_raises StandardError do
+        FluShot.inject('name')
+      end
+    end
+  end
 end
