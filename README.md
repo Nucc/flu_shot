@@ -13,9 +13,10 @@ First we specify the area where the flu shot needs to be injected:
 ```
 class UserController < ApplicationController
   def show
-    FluShot.inject(:user_controller_show) do
-      User.find(params[:user_id])
-    end
+    # Inject some harmful code, the behaviour is specified in the prespcription definition later.
+    FluShot.inject(:user_controller_show)
+    
+    User.find(params[:user_id])
   end
 end
 ```
