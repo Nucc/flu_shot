@@ -1,6 +1,6 @@
-# FluShot
+<img align='right' height='140px' src="https://raw.githubusercontent.com/Nucc/flu_shot/assets/logo.png"/>
 
-<img align='right' height='120px' src="https://raw.githubusercontent.com/Nucc/flu_shot/assets/logo.png"/>
+# FluShot
 
 FluShot is a Chaos Testing tool for Ruby applications. It can inject unexpected behaviors into your system, like adding extra latency to a network request, simulating infinite loops, raising exceptions.
 
