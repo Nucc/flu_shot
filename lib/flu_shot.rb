@@ -13,13 +13,13 @@ module FluShot
 
   class Error < StandardError; end
 
-  def self.inject(name, &block)
+  def self.inject(name, params = {}, &block)
     if !before_filter.call
       return
     end
 
     Prescription.for(name).each do |prescription|
-      Vaccine.find(prescription[:vaccine]).new(prescription[:params])
+      Vaccine.find(prescription[:vaccine]).new(prescription[:params].merge(params))
     end
 
     # @test
