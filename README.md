@@ -2,41 +2,50 @@
 
 # FluShot
 
-FluShot is a Chaos Testing tool for Ruby applications. It can inject unexpected behaviors into your system, like adding extra latency to a network request, simulating infinite loops, raising exceptions.
+FluShot is a Chaos Testing tool for Ruby applications. It can inject unusual and unexpected behaviors into your system, like adding extra latency to a network request, simulating infinite loops, raising exceptions.
 
 **The project is currently in `work in progress`**
 
 Idea:
 
-First we specify the area where the flu shot needs to be injected:
+First you need to specify the area where the flu shot needs to be injected, in my example it's the `user_controller_show` point. I also pass the account_id in order to specify a subset of accounts that I use for testing.
 
 ```
 class UserController < ApplicationController
   def show
     # Inject some harmful code, the behaviour is specified in the prespcription definition later.
-    FluShot.inject(:user_controller_show)
+    FluShot.inject(:user_controller_show, {account: current_account})
     
     User.find(params[:user_id])
   end
 end
 ```
 
-We can specify vaccines that has a certain behaviour, like adding extra latency:
+You need to define vaccines that occur different behaviours. Here is an example for adding extra latency on test account in the production environment.
 ```
 class Latency < FluShot::Vaccine
   label :latency
 
   def initialize(params = {})
-    sleep(rand(params[:max] - params[:min]) + params[:min])
+    if params[:account].is_a_test_account?
+      sleep(rand(params[:max] - params[:min]) + params[:min])
+    end
   end
 end
 ```
 
-Finally we need to create a prescription for the `user_controller_show` and inject the `latency` vaccine:
+The last step is we need to create a prescription for the `user_controller_show` and inject the `latency` vaccine:
 
 ```
 FluShot::Prescription.for(:user_controller_show) do |prescription|
   prescription.add(:latency, {min: 1000, max: 3000})
+end
+```
+
+Now if you try to call `Users#show` action on a test account then you should see 1-3 seconds latency. To reset the latency you need to create a prescription with empty body:
+
+```
+FluShot::Prescription.for(:user_controller_show) do |prescription|
 end
 ```
 
