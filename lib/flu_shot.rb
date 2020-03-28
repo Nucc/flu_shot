@@ -11,6 +11,10 @@ module FluShot
     autoload :Redis, 'flu_shot/storage/redis'
   end
 
+  module Pharmacy
+    autoload :Latency, 'flu_shot/pharmacy/latency'
+  end
+
   class Error < StandardError; end
 
   def self.inject(name, params = {}, &block)
