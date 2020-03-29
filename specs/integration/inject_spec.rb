@@ -6,10 +6,14 @@ describe :inject do
     label :injection_test_vaccine
 
     def initialize(*args)
-      test(*args)
     end
+  end
 
-    def test(*args)
+  class FilterMock < FluShot::Filter
+    label :filter_mock
+
+    def check(params = {})
+      params[:allow]
     end
   end
 
@@ -18,7 +22,7 @@ describe :inject do
       p.add(:injection_test_vaccine, {})
     end
 
-    Rand123.any_instance.expects(:test).once
+    Rand123.expects(:new).once
     FluShot.inject(:injection_name)
   end
 
@@ -28,7 +32,7 @@ describe :inject do
       p.add(:injection_test_vaccine, {})
     end
 
-    Rand123.any_instance.expects(:test).once
+    Rand123.expects(:new).once
     FluShot.inject(:injection_name)
   end
 
@@ -37,7 +41,28 @@ describe :inject do
       p.add(:injection_test_vaccine, {})
     end
 
-    Rand123.any_instance.expects(:test).with(account: 'account_name').once
+    Rand123.expects(:new).with(account: 'account_name').once
     FluShot.inject(:injection_name, account: 'account_name')
   end
+
+  it 'does not execute the vaccines after a filter returned false on #check' do
+    FluShot::Prescription.spec(:injection_name) do |p|
+      p.filter(:filter_mock, {allow: false})
+      p.add(:vaccine_label, {param: 2})
+    end
+
+    Rand123.expects(:new).with(account: 'account_name').never
+    FluShot.inject(:injection_name, account: 'account_name')
+  end
+
+  it 'does not execute the vaccines after a filter returned false on #check' do
+    FluShot::Prescription.spec(:injection_name) do |p|
+      p.filter(:filter_mock, {allow: true})
+      p.add(:vaccine_label, {param: 2})
+    end
+
+    Rand123.expects(:new).never
+    FluShot.inject(:injection_name, account: 'account_name')
+  end
+
 end

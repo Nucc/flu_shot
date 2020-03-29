@@ -15,6 +15,8 @@ module FluShot
       self.class.prescriptions.add(@name, current)
     end
 
+    alias_method :filter, :add
+
     def self.for(name)
       prescriptions.get(name)
     end
