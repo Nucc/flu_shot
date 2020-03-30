@@ -28,5 +28,13 @@ describe FluShot::Prescription do
       assert_equal({:vaccine => :vaccine_label, :params => {:param => 1}}, FluShot::Prescription.for(:name).first)
       assert_equal 2, FluShot::Prescription.for(:name).size
     end
+
+    it 'can apply filters' do
+      FluShot::Prescription.spec(:name) do |order|
+        order.filter(:vaccine_label)
+      end
+
+      assert_equal({:vaccine => :vaccine_label, :params => {}}, FluShot::Prescription.for(:name).first)
+    end
   end
 end

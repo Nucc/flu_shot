@@ -3,12 +3,17 @@ require 'flu_shot/vaccine'
 require 'flu_shot/prescription'
 require 'flu_shot/config'
 require 'flu_shot/sneeze'
+require 'flu_shot/filter'
 
 
 module FluShot
   module Storage
     autoload :Memory, 'flu_shot/storage/memory'
     autoload :Redis, 'flu_shot/storage/redis'
+  end
+
+  module Pharmacy
+    autoload :Latency, 'flu_shot/pharmacy/latency'
   end
 
   class Error < StandardError; end
@@ -19,7 +24,12 @@ module FluShot
     end
 
     Prescription.for(name).each do |prescription|
-      Vaccine.find(prescription[:vaccine]).new(prescription[:params].merge(params))
+      klass = Vaccine.find(prescription[:vaccine])
+      if (klass < ::FluShot::Filter)
+        break unless klass.new.check(prescription[:params].merge(params))
+      else
+        klass.new(prescription[:params].merge(params))
+      end
     end
 
     # @test
